@@ -94,7 +94,7 @@ rm -rf ~/dlib-tmp
 
 RUN cd /root && git clone https://github.com/BVLC/caffe.git && cd caffe && \
 # Install python dependencies
-cat python/requirements.txt | xargs -n1 pip install \
+pip2 install -r python/requirements.txt && \
 mkdir build && cd build && \
 cmake .. && \
 make -j"$(nproc)" all && \
