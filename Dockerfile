@@ -101,12 +101,24 @@ make install
 # Add to Python path
 ENV PYTHONPATH=/root/caffe/python:$PYTHONPATH
 
+# --------- OpenFace
+
+RUN cd /root && git clone https://github.com/cmusatyalab/openface.git && \
+cd openface && \
+# download models
+./models/get-models.sh && \
+pip2 install -r requirements.txt && \
+python2 setup.py install && \
+pip2 install -r demos/web/requirements.txt && \
+pip2 install -r training/requirements.txt
+
+# Add to Python path
+ENV PYTHONPATH=/root/openface:$PYTHONPATH
+
 # --------- Python packages
 ADD . /root/deep_learning_utils
 RUN cd /root/deep_learning_utils && \
-    ./models/get-models.sh && \
-    pip2 install -r requirements.txt && \
-    python2 setup.py install
+    pip2 install -r requirements.txt
 	
 # Add to Python path
 ENV PYTHONPATH=/root/deep_learning_utils:$PYTHONPATH
