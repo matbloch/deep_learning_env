@@ -91,8 +91,10 @@ rm -rf ~/dlib-tmp
 
 # --------- caffe
 # Clone Caffe repo and move into it
-RUN cd /root && git clone https://github.com/BVLC/caffe.git && \
-cd caffe && \
+
+RUN cd /root && git clone https://github.com/BVLC/caffe.git && cd caffe && \
+# Install python dependencies
+cat python/requirements.txt | xargs -n1 pip install \
 mkdir build && cd build && \
 cmake .. && \
 make -j"$(nproc)" all && \
