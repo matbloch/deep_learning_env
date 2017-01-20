@@ -35,7 +35,7 @@ RUN apt-get update && apt-get install -y \
 	libleveldb-dev \
 	liblmdb-dev \
 	libsnappy-dev \
-	fortran > /dev/null \
+	gfortran > /dev/null \
     software-properties-common \
     wget \
     zip \
