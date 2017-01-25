@@ -35,6 +35,7 @@ RUN apt-get update && apt-get install -y \
 	libleveldb-dev \
 	liblmdb-dev \
 	libsnappy-dev \
+	bc \
 	gfortran > /dev/null \
     software-properties-common \
     wget \
@@ -89,27 +90,6 @@ RUN cd ~ && \
     cp dlib.so /usr/local/lib/python2.7/dist-packages && \
 rm -rf ~/dlib-tmp
 
-# --------- caffe
-# Clone Caffe repo and move into it
-
-ENV CAFFE_ROOT=/opt/caffe
-WORKDIR $CAFFE_ROOT
-
-# FIXME: use ARG instead of ENV once DockerHub supports this
-ENV CLONE_TAG=rc4
-
-RUN git clone -b ${CLONE_TAG} --depth 1 https://github.com/BVLC/caffe.git . && \
-    pip install --upgrade pip && \
-    cd python && for req in $(cat requirements.txt) pydot; do pip install $req; done && cd .. && \
-    mkdir build && cd build && \
-    cmake -DCPU_ONLY=1 .. && \
-    make -j"$(nproc)"
-
-ENV PYCAFFE_ROOT $CAFFE_ROOT/python
-ENV PYTHONPATH $PYCAFFE_ROOT:$PYTHONPATH
-ENV PATH $CAFFE_ROOT/build/tools:$PYCAFFE_ROOT:$PATH
-RUN echo "$CAFFE_ROOT/build/lib" >> /etc/ld.so.conf.d/caffe.conf && ldconfig
-
 # --------- OpenFace
 
 RUN cd /root && git clone https://github.com/cmusatyalab/openface.git && \
@@ -131,6 +111,27 @@ RUN cd /root/deep_learning_utils && \
 	
 # Add to Python path
 ENV PYTHONPATH=/root/deep_learning_utils:$PYTHONPATH
+
+# --------- caffe
+
+# Clone Caffe repo and move into it
+RUN cd /root && git clone https://github.com/BVLC/caffe.git && cd caffe && \
+# Install python dependencies
+pip2 install -r python/requirements.txt
+
+
+# Move into Caffe repo
+RUN cd /root/caffe && \
+# Make and move into build directory
+  mkdir build && cd build && \
+# CMake
+  cmake .. && \
+# Make
+  make -j"$(nproc)" all && \
+  make install
+
+# Add to Python path
+ENV PYTHONPATH=/root/caffe/python:$PYTHONPATH
 
 EXPOSE 8000 9000
 
