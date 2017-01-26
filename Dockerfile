@@ -40,6 +40,11 @@ RUN apt-get update && apt-get install -y \
     software-properties-common \
     wget \
     zip \
+	python-matplotlib \
+	python-pil \
+	build-essential \
+	cython \
+	python-skimage \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 	
 # --------- Torch
