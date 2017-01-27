@@ -1,4 +1,5 @@
-FROM ubuntu:14.04
+#FROM ubuntu:14.04
+FROM ubuntu:16.04
 MAINTAINER Matthias Bloch <matbloch@ethz.ch>
 
 RUN apt-get update && apt-get install -y \
@@ -27,6 +28,7 @@ RUN apt-get update && apt-get install -y \
     python-scipy \
     python-pandas \
     python-protobuf\
+    python-setuptools \
 	libprotobuf-dev \
 	libgoogle-glog-dev \
 	libgflags-dev \
