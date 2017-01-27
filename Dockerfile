@@ -1,5 +1,6 @@
 #FROM ubuntu:14.04
-FROM ubuntu:16.04
+#FROM ubuntu:16.04
+FROM kaixhin/caffe
 MAINTAINER Matthias Bloch <matbloch@ethz.ch>
 
 RUN apt-get update && apt-get install -y \
@@ -118,27 +119,6 @@ RUN cd /root/deep_learning_utils && \
 	
 # Add to Python path
 ENV PYTHONPATH=/root/deep_learning_utils:$PYTHONPATH
-
-# --------- caffe
-
-# Clone Caffe repo and move into it
-RUN cd /root && git clone https://github.com/BVLC/caffe.git && cd caffe && \
-# Install python dependencies
-pip2 install -r python/requirements.txt
-
-
-# Move into Caffe repo
-RUN cd /root/caffe && \
-# Make and move into build directory
-  mkdir build && cd build && \
-# CMake
-  cmake .. && \
-# Make
-  make -j"$(nproc)" all && \
-  make install
-
-# Add to Python path
-ENV PYTHONPATH=/root/caffe/python:$PYTHONPATH
 
 EXPOSE 8000 9000
 
